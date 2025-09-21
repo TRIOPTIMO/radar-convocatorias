@@ -1,4 +1,3 @@
-import React from "react";
 import { AppBar, Toolbar, Typography, Button, Container, Stack, Box } from "@mui/material";
 import ConfigPanel from "./components/ConfigPanel";
 import FeedList from "./components/FeedList";
@@ -28,10 +27,9 @@ export default function App() {
     setConfig({ ...config, feeds: config.feeds.map((f) => (f.id === id ? { ...f, enabled: !f.enabled } : f)) });
   }
 
-  function updateKeywords(s: string) {
-    const arr = s.split(",").map((x) => x.trim()).filter(Boolean);
-    setConfig({ ...config, keywords: arr });
-  }
+function updateKeywords(arr: string[]) {
+  setConfig({ ...config, keywords: arr });
+}
 
   return (
     <>

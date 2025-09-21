@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Paper, Typography, TextField, FormControlLabel, Switch,
+  Paper, Typography, TextField, FormControlLabel, Switch, Tooltip,
   Divider, Button, List, ListItem, ListItemIcon, Checkbox, ListItemText, IconButton, Stack
 } from "@mui/material";
 
@@ -13,32 +13,46 @@ interface Props {
   onAddFeed: () => void;
   onRemoveFeed: (id: string) => void;
   onToggleFeed: (id: string) => void;
-  onUpdateKeywords: (s: string) => void;
+  onUpdateKeywords: (s: string[]) => void;
 }
 
 export default function ConfigPanel({
   config, onChange, onAddFeed, onRemoveFeed, onToggleFeed, onUpdateKeywords
 }: Props) {
+  const [keywordsText, setKeywordsText] = React.useState(config.keywords.join(", "));
+
   return (
     <Paper elevation={1} sx={{ p: 2 }}>
       <Typography variant="h6" gutterBottom>Configuración</Typography>
-
       <TextField
         label="Palabras clave (separadas por coma)"
-        value={config.keywords.join(", ")}
-        onChange={(e) => onUpdateKeywords(e.target.value)}
-        multiline minRows={3} fullWidth sx={{ mb: 2 }}
+        value={keywordsText}
+        onChange={(e) => {
+          const raw = e.target.value;
+          setKeywordsText(raw);
+          // al mismo tiempo, actualizamos config
+          const arr = raw.split(",").map((x) => x.trim()).filter(Boolean);
+          onUpdateKeywords(arr);
+        }}
+        multiline
+        minRows={3}
+        fullWidth
+        sx={{ mb: 2 }}
       />
-
-      {/* Reemplazamos Grid por Stack */}
       <Stack direction="row" spacing={2} sx={{ mb: 1 }}>
-        <TextField
-          label="Umbral relevancia"
-          type="number"
-          value={config.minScore}
-          onChange={(e) => onChange({ ...config, minScore: Number(e.target.value) })}
-          fullWidth
-        />
+        <Tooltip
+          title="El umbral filtra convocatorias según coincidencias con tus palabras clave. 
+  0 = muestra todo · 3 = solo las más relacionadas."
+          arrow
+        >
+          <TextField
+            label="Umbral de relevancia"
+            type="number"
+            value={config.minScore}
+            onChange={(e) => onChange({ ...config, minScore: Number(e.target.value) })}
+            fullWidth
+          />
+        </Tooltip>
         <TextField
           label="Refresco (min)"
           type="number"

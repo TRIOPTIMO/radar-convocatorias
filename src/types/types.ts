@@ -17,13 +17,15 @@ useProxy: boolean;
 
 
 export interface FeedItem {
-id: string; // hash a partir de link+title
-sourceId: string;
-sourceName: string;
-title: string;
-link: string;
-pubDate?: string;
-description?: string;
-score: number;
-matched: string[]; // palabras clave encontradas
+  id: string;
+  sourceId: string;
+  sourceName: string;
+  title: string;
+  link: string;
+  description: string;
+  pubDate?: string;
+  score: number;
+  matched: string[];
+  deadline?: string;
+  openingDate?: string; 
 }

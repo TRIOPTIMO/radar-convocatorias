@@ -22,19 +22,20 @@ return Math.random().toString(36).slice(2);
 }
 
 
-export const DEFAULT_FEEDS: FeedSource[] = [
-{
-id: cryptoRandomId(),
-name: "EU Funding & Tenders – All calls (ejemplo)",
-url: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-rss",
-tags: ["UE", "calls"],
-enabled: true,
-},
-{
-id: cryptoRandomId(),
-name: "TED – España (ejemplo)",
-url: "https://ted.europa.eu/udl?uri=TED:NOTICE:RSS:ES:XML",
-tags: ["UE", "licitaciones"],
-enabled: false,
-},
+export const DEFAULT_FEEDS: FeedSource[]  = [
+  {
+    id: cryptoRandomId(),
+    name: "EU Funding & Tenders – Global RSS",
+    url: "https://ec.europa.eu/info/funding-tenders/opportunities/data/referenceData/grantTenders-rss.xml",
+    tags: ["UE","F&T"],
+    enabled: true,
+  },
+  {
+    id: cryptoRandomId(),
+    name: "TED – búsqueda 'educ'",
+    url: "https://ted.europa.eu/en/simap/rss-feed/-/rss/search/educ",
+    tags: ["TED","licitaciones"],
+    enabled: true,
+  },
 ];
+
