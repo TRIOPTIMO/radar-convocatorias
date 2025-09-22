@@ -1,6 +1,7 @@
 import { Paper, Box, Typography, Chip, Link } from "@mui/material";
 import type { FeedItem } from "../types/types";
 import { sanitizeHTML } from "../services/ranking"; // 👈 importa
+import { isExpired, parseDeadlineToDate } from "../services/dates";
 
 export default function ItemCard({ it }: { it: FeedItem }) {
     return (
@@ -31,16 +32,29 @@ export default function ItemCard({ it }: { it: FeedItem }) {
                             {sanitizeHTML(it.description)} {/* 👈 sin etiquetas */}
                         </Typography>
                     )}
-                    {it.openingDate && (
-                        <Typography variant="body2" color="primary" sx={{ mt: 1 }}>
-                            📅 Opening Date: {it.openingDate}
-                        </Typography>
-                    )}
-                    {it.deadline && (
-                        <Typography variant="body2" color="error" sx={{ mt: 1, fontWeight: 600 }}>
-                            ⏰ Deadline: {it.deadline}
-                        </Typography>
-                    )}
+                    <Box mt={1} display="flex" gap={2} flexWrap="wrap">
+                        {it.openingDate && (
+                            <Typography variant="body2" color="primary">
+                                📅 Opening: <strong>{it.openingDate}</strong>
+                            </Typography>
+                        )}
+                        {it.deadline && (
+                            <Typography
+                                variant="body2"
+                                color={isExpired(it.deadline) ? "text.secondary" : "error"}
+                                fontWeight={isExpired(it.deadline) ? 400 : 600}
+                            >
+                                ⏰ Deadline:{" "}
+                                <strong>
+                                    {parseDeadlineToDate(it.deadline)?.toLocaleString("es-ES", {
+                                        dateStyle: "full",
+                                        timeStyle: "short",
+                                    }) ?? it.deadline}
+                                </strong>
+                                {isExpired(it.deadline) && " · Expirada"}
+                            </Typography>
+                        )}
+                    </Box>
                 </Box>
             </Box>
         </Paper>

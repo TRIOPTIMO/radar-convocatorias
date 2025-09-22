@@ -18,6 +18,7 @@ keywords: parsed.keywords ?? DEFAULT_KEYWORDS,
 minScore: parsed.minScore ?? 2,
 autoRefreshMinutes: parsed.autoRefreshMinutes ?? 60,
 useProxy: parsed.useProxy ?? false,
+hideExpired: parsed.hideExpired ?? true,
 } as AppConfig;
 } catch {}
 }
@@ -27,6 +28,7 @@ keywords: DEFAULT_KEYWORDS,
 minScore: 2,
 autoRefreshMinutes: 60,
 useProxy: false,
+hideExpired: true,
 };
 }
 

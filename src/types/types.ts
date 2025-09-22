@@ -13,6 +13,7 @@ keywords: string[];
 minScore: number; // umbral de relevancia para notificar/mostrar
 autoRefreshMinutes: number; // intervalo de actualización
 useProxy: boolean;
+hideExpired: boolean;
 }
 
 

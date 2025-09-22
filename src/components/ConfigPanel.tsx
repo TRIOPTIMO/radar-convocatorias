@@ -61,6 +61,15 @@ export default function ConfigPanel({
           fullWidth
         />
       </Stack>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={config.hideExpired}
+            onChange={(e) => onChange({ ...config, hideExpired: e.target.checked })}
+          />
+        }
+        label="Ocultar convocatorias expiradas"
+      />
 
       <FormControlLabel
         control={

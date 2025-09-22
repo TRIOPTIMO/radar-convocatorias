@@ -4,6 +4,7 @@ import type { AppConfig, FeedItem } from "../types/types";
 import { applyProxy, fetchAsText, parseRSS } from "../services/rss";
 import { rankItem, sanitizeHTML } from "../services/ranking";
 import { loadConfig, loadKnownIds, saveConfig, saveKnownIds } from "../services/storage";
+import { isExpired } from "../services/dates";
 
 export function useRadar() {
   // ---- Estado principal
@@ -57,21 +58,30 @@ export function useRadar() {
   }, []);
 
   // ---- Filtro y orden
-  const filteredItems = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let arr = items;
+const filteredItems = useMemo(() => {
+  const q = query.trim().toLowerCase();
+  let arr = items;
 
-    if (q) {
-      arr = arr.filter((it) =>
-        (it.title + " " + (it.description || "")).toLowerCase().includes(q)
-      );
-    }
-    if (onlyNew) {
-      arr = arr.filter((it) => !knownIdsRef.current.has(it.id));
-    }
-    // orden por score desc
-    return arr.slice().sort((a, b) => b.score - a.score);
-  }, [items, query, onlyNew]);
+  // 🔹 Nuevo filtro: quitar expiradas si la opción está activa
+  if (config.hideExpired) {
+    arr = arr.filter((it) => !isExpired(it.deadline));
+  }
+
+  // 🔹 Filtro por texto
+  if (q) {
+    arr = arr.filter((it) =>
+      (it.title + " " + (it.description || "")).toLowerCase().includes(q)
+    );
+  }
+
+  // 🔹 Filtro de "solo nuevos"
+  if (onlyNew) {
+    arr = arr.filter((it) => !knownIdsRef.current.has(it.id));
+  }
+
+  // 🔹 Orden por score descendente
+  return arr.slice().sort((a, b) => b.score - a.score);
+}, [items, query, onlyNew, config.hideExpired]);
 
   // ---- Lógica principal: descargar y rankear
   async function refresh() {
